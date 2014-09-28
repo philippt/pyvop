@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} The List {% endblock %}
+
+{% block content %}
+
+{% if machines %}
+    <ul>
+    {% for machine in machines %}
+        <li><a href="/foo/machine/{{ machine.name }}" title="{{ machine.source }}">{{ machine.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No machines found.</p>
+{% endif %}
+
+{% endblock %}

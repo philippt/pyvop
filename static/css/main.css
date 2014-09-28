@@ -1,0 +1,22 @@
+/* --- CSS RESET --- */
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body{
+    padding: 0;
+    margin: 15px;
+    min-height: 100%;
+}
+
+:focus {outline: 0;}
+
+#content .machine ul#map,
+#content .machine .status-bar ul {
+    list-style-type: none;
+}
+
+#content .machine .status-bar ul li {
+    display: inline-block;
+}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %} Machine {{ name }} {% endblock %}
+
+{% block content %}
+
+{% if name %}
+  <div class="machine">
+    <h2>{{ name }}</h2>
+    <p class="clock">system time: {{ date }}</p>
+    <br/>
+    <div class="status-bar">
+        <ul>
+            <li>
+                <input type="checkbox" {% if maint_file_found %}checked="checked"{% endif %} />&nbsp;<span>M!</span>
+            </li>
+            <li>
+                <input type="checkbox" {% if puppet_status == 'Finished' %}checked="checked"{% endif %} />&nbsp;<span>puppet</span>
+                <span>{{ puppet_run_at }} &nbsp; {{ minutes_since_last_puppet_run }}</span>
+            </li>
+        </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
