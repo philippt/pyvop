@@ -1,1 +1,0 @@
-[{"source": "ec2", "subnet": "public", "id": "i-d6f1633b", "groups": ["administration"], "name": "philippt.dr.da"}, {"source": "la", "type": "vm", "name": "philippt01.da"}]
