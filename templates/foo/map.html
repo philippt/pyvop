@@ -10,7 +10,6 @@
         <li>
           <div class="machine">
             <h2>{{ m.name }}</h2>
-            <p class="clock">system time: {{ m.status.date }}</p>
             <br/>
             <div class="status-bar">
                 <ul>
@@ -18,8 +17,8 @@
                         <input type="checkbox" {% if m.status.maint_file_found %}checked="checked"{% endif %} />&nbsp;<span>M!</span>
                     </li>
                     <li>
-                        <input type="checkbox" {% if m.status.puppet_status == 'Finished' %}checked="checked"{% endif %} />&nbsp;<span>puppet</span>
-                        <span title="{{ m.status.last_puppet_log }}">{{ m.status.puppet_run_at }} &nbsp; {{ m.status.minutes_since_last_puppet_run }}</span>
+                        <input type="checkbox" {% if m.status.puppet_status == 'Finished' %}checked="checked"{% endif %} />&nbsp;
+                        <span title="{{ m.status.last_puppet_log }}">{{ m.status.minutes_since_last_puppet_run }}</span>
                     </li>
                 </ul>
             </div>

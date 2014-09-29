@@ -5,6 +5,7 @@ import pprint
 import json
 import sys
 import os
+# TODO hardcoded philippt-specific
 PUPPET_PATH='%s/deviant/puppet' % os.environ['HOME']
 sys.path.append(PUPPET_PATH)
 

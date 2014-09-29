@@ -32,8 +32,9 @@ def main():
             fetched = fetched + loaded
             print " -- > %s (%d)" % (target_file, len(loaded)) 
     
-    with open('../processing/machines.raw', 'w') as outfile:
+    with open('machines.raw', 'w') as outfile:
         json.dump(fetched, outfile)
+    print " -- > %s (%d)" % ('machines.raw', len(fetched))
 
 if __name__ == '__main__':
     sys.exit(main())

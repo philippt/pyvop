@@ -12,11 +12,16 @@ html, body{
 
 :focus {outline: 0;}
 
-#content .machine ul#map,
+#content ul#map,
 #content .machine .status-bar ul {
     list-style-type: none;
 }
 
 #content .machine .status-bar ul li {
     display: inline-block;
+}
+
+#content .machine {
+    height: 75px;
+    width: 200px;
 }

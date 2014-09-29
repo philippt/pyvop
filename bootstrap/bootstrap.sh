@@ -22,4 +22,5 @@ apt-get install -y python-django libmysqlclient-dev
 
 pip install mysql-python
 
+# memcached
 apt-get install -y memcached python-memcache

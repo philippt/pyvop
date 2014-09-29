@@ -23,7 +23,7 @@ def public(request):
 
 def read_machines(request=None):
     '''reads machines from a JSON file and applies filters from the request'''
-    json_data = open('static/data/processing/machines.raw')
+    json_data = open('static/data/machines.raw')
     result = json.load(json_data)
     if request:
         print request.GET.keys()
@@ -55,51 +55,60 @@ def machine(request, name):
 def map(request):
     machines = read_machines(request)
     need_data = []
-    result = {}
     
     for m in machines:
         key = str(m['name'])
         cached = mc.get(key)
-        if cached:
+        if cached and 'force' not in request.GET.keys():
             print "[cache] hit: %s -> %s" % (key, cached)
             m['status'] = cached
+        else:
+            print "[cache] miss : %s" % key
+            need_data.append(key)
     
-    targets = []
-    for m in machines:
-        if 'status' not in m:
-            print "[cache] miss : %s" % m['name']
-            targets.append(m['name'])
-            
-    if len(targets) > 0:
-        with_user = ['philippt@%s' % t for t in targets]    
+    result = {}
+
+    if len(need_data) > 0:
+        with_user = ['philippt@%s' % n for n in need_data]
+
+        start_ts = datetime.datetime.now()
         multi_result = execute(get_status, hosts=with_user)
         
-        for userhost, result in multi_result.iteritems():
+        for userhost, status in multi_result.iteritems():
             user, host = userhost.split('@')
-            
-            the_machine = [m for m in machines if m['name'] == host][0]
-            the_machine['status'] = result
-
             mc_key = str(host)
+
             print "[cache] write: %s" % mc_key
-            mc.set(mc_key, result)
-                        
+            result[mc_key] = status
+            mc.set(mc_key, status)
+
+        duration = (datetime.datetime.now() - start_ts).total_seconds()
+        print "[stats] fetched %d in %d secs" % (len(multi_result.keys()), duration)
+
+    for m in machines:
+        if 'status' not in m:
+            key = str(m['name'])
+            if key in result:
+                m['status'] = result[key]
+
     return render_to_response('foo/map.html', {'machines': machines})
 
 
-@parallel
+@parallel(pool_size=15)
 def get_status():
     s = {
          'timestamp': datetime.datetime.utcnow().strftime("%s"),
-         'date': run("date"), 
+         'date': run("date"),
+         'timezone': run("date +%Z"),
          'hostname': run("hostname")
     }
     
+    s['maint_file_found'] = False
     try:
         run("ls /var/maint/reserve")
         s['maint_file_found'] = True
     except:
-        s['maint_file_found'] = False
+        foo = [a for a in 'papperlapapp']
 
     last_puppet_log = run("tail /var/log/puppet.log | grep -E 'Skipping|Finished' | tail -n1")
     # Sep 28 11:31:21 philippt01 puppet-agent[11661]: Skipping run of Puppet configuration client; administratively disabled (Reason: 'philippt reserve until 2014-09-22 07:38:08 (comment: testing pbuilder)');
@@ -109,11 +118,10 @@ def get_status():
     s['last_puppet_log'] = last_puppet_log
     if matched:
         groups = matched.groups()
-        last_puppet_run = parse(groups[0])
-        s['puppet_run_at'] = last_puppet_run.isoformat() #.strftime('%s')
-        
-        #with settings(warn_only=True):
-        #    s['minutes_since_last_puppet_run'] = (parse(s['date']) - last_puppet_run) / 60
+        last_puppet_run = parse(groups[0] + ' %s' % s['timezone'])
+        s['puppet_run_at'] = last_puppet_run.isoformat()
+
+        s['minutes_since_last_puppet_run'] = int((parse(s['date']) - last_puppet_run).total_seconds() / 60)
         s['puppet_status'] = groups[4]
 
     print "got status : %s" % s
