@@ -2,19 +2,34 @@
 
 {% block title %} The Map {% endblock %}
 
+{% if menu %}
+{% block menu %}
+<ul id="menu">
+    {% for key, counts in menu.items %}
+    <li>{{ key }}
+        <ul class="submenu">
+        {% for value, count in counts.items %}
+        <li>{{ value }} : {{ count }}</li>
+        {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+{% endif %}
+
 {% block content %}
 
 {% if machines %}
     <ul id="map">
     {% for m in machines %}
-        <li>
-          <div class="machine">
-            <h2>{{ m.name }}</h2>
+        <li class="machine">
+            <h3>{{ m.name }}</h3>
             <br/>
             <div class="status-bar">
                 <ul>
                     <li>
-                        <input type="checkbox" {% if m.status.maint_file_found %}checked="checked"{% endif %} />&nbsp;<span>M!</span>
+                        <input type="checkbox" {% if m.status.maint_file_found == True %}checked="checked"{% endif %} />&nbsp;<span>M!</span>
                     </li>
                     <li>
                         <input type="checkbox" {% if m.status.puppet_status == 'Finished' %}checked="checked"{% endif %} />&nbsp;
@@ -22,7 +37,6 @@
                     </li>
                 </ul>
             </div>
-          </div>
         </li>
     {% endfor %}
     </ul>

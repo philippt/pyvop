@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^foo/machine/(.+)$', 'foo.views.machine'),
     url(r'^foo/map$', 'foo.views.map'),
     url(r'^foo/list$', 'foo.views.list'),
+    url(r'^foo/attributes$', 'foo.views.attributes'),
     url(r'^foo/$', 'foo.views.index'),
     #url(r'^.+$', 'foo.views.index'),
     

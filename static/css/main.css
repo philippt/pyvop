@@ -6,13 +6,31 @@
 
 html, body{
     padding: 0;
-    margin: 15px;
+    margin: 10px;
     min-height: 100%;
 }
 
 :focus {outline: 0;}
 
-#content ul#map,
+#menu, #content {
+    display: inline-block;
+}
+
+#menu {
+    width: 150px;
+    float: left;
+}
+
+#menu li {
+    margin-left: 5px;
+    list-style-type: none;
+}
+
+#content {
+    width: 80%;
+}
+
+#content ul#map #content,
 #content .machine .status-bar ul {
     list-style-type: none;
 }
@@ -21,7 +39,11 @@ html, body{
     display: inline-block;
 }
 
-#content .machine {
-    height: 75px;
+#content ul#map .machine {
+    height: 60px;
     width: 200px;
+    display: inline-block;
+    border: 1px solid #ddd;
+    padding: 2px;
+    margin: 5px;
 }
